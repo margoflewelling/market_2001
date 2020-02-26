@@ -55,26 +55,26 @@ class MarketTest < Minitest::Test
   end
 
   def test_it_can_get_total_inventory
-    skip
     @market.add_vendor(@vendor1)
     @market.add_vendor(@vendor2)
     @market.add_vendor(@vendor3)
-    @vendor3.stock(item3, 10)
-    expected = {}
-    assert_equal expected, @market.total_inventory
+    @vendor3.stock(@item3, 10)
+    assert_equal 4, @market.total_inventory.length
+    assert_kind_of Hash, @market.total_inventory
+    expected = {quantity: 50, vendors: [@vendor2]}
+    assert_equal expected, @market.total_inventory[@item4]
   end
-
 
   def test_it_can_get_over_stocked_items
-    skip
     @market.add_vendor(@vendor1)
     @market.add_vendor(@vendor2)
     @market.add_vendor(@vendor3)
-    @vendor3.stock(item3, 10)
-    expected = []
-    assert_equal expected, @market.overstocked_items
-  end
+    @vendor3.stock(@item3, 10)
+    assert_equal [@item1], @market.overstocked_items
 
+    @vendor3.stock(@item3, 40)
+    assert_equal [@item1, @item3], @market.overstocked_items
+  end
 
   def test_it_can_get_sorted_items_list
     @market.add_vendor(@vendor1)
@@ -86,26 +86,3 @@ class MarketTest < Minitest::Test
   end
 
 end
-
-# pry(main)> market.total_inventory
-# #=> {
-#   #   #<Item:0x007f9c56740d48...> => {
-#   #     quantity: 100,
-#   #     vendors: [#<Vendor:0x00007fe1348a1160...>, #<Vendor:0x00007fe134910650...>]
-#   #   },
-#   #   #<Item:0x007f9c565c0ce8...> => {
-#   #     quantity: 7,
-#   #     vendors: [#<Vendor:0x00007fe1348a1160...>]
-#   #   },
-#   #   #<Item:0x007f9c56343038...> => {
-#   #     quantity: 50,
-#   #     vendors: [#<Vendor:0x00007fe1349bed40...>]
-#   #   },
-#   #   #<Item:0x007f9c562a5f18...> => {
-#   #     quantity: 35,
-#   #     vendors: [#<Vendor:0x00007fe1349bed40...>, #<Vendor:0x00007fe134910650...>]
-#   #   },
-#   # }
-#
-# pry(main).overstocked_items
-# #=> [#<Item:0x007f9c56740d48...>]

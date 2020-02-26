@@ -30,4 +30,32 @@ class Market
     all_names.flatten.uniq.sort
   end
 
+
+  def total_inventory
+    @vendors.reduce({}) do |items, vendor|
+      vendor.inventory.each do |item, quantity|
+        if items.has_key?(item)
+          items[item][:quantity] += quantity
+          items[item][:vendors] << vendor
+        else
+          items[item] = {}
+          items[item][:quantity] = quantity
+          items[item][:vendors] = [vendor]
+        end
+      end
+      items
+    end
+  end
+
+  def overstocked_items
+    overstocked = []
+    total_inventory.each do |item, values|
+      if values[:quantity] > 50 && values[:vendors].length > 1
+        overstocked << item 
+      end
+    end
+    overstocked
+  end
+
+
 end
