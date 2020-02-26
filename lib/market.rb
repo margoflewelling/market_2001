@@ -51,11 +51,14 @@ class Market
     overstocked = []
     total_inventory.each do |item, values|
       if values[:quantity] > 50 && values[:vendors].length > 1
-        overstocked << item 
+        overstocked << item
       end
     end
     overstocked
   end
 
+  def date
+    Date.today.strftime("%d/%m/%Y")
+  end
 
 end
